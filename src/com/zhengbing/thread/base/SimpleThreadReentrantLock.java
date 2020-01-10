@@ -1,20 +1,29 @@
 package com.zhengbing.thread.base;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * @author zhengbing_vendor
  * @date 2020/1/10
  **/
-public class SimpleThreadSynchronized {
+public class SimpleThreadReentrantLock {
 
     private  static  int   count = 0;
 
     public static void main(String[] args) throws InterruptedException {
+        final ReentrantLock lock = new ReentrantLock();
+
         Runnable  task = new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i <1000000 ; i++) {
-                    synchronized (this) {
+                    lock.lock();
+                    try {
                         count += 1;
+                    }finally {
+                        if (lock.isLocked()) {
+                            lock.unlock();
+                        }
                     }
                 }
             }
